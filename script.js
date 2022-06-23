@@ -1,6 +1,4 @@
 let display = document.getElementById("display-input");
-//let allclear = document.getElementById("allclear");
-//let multiplication = document.getElementById("*");
 let operatorButton = document.querySelectorAll("operator");
 let buttonz = Array.from(document.getElementsByClassName("buttons"));
 let display_value;
@@ -14,7 +12,7 @@ function add(a,b) {
 };
 
 function subtract(a,b) {
-    let difference = a - b;
+    let difference = a-b;
     return difference;
 };
 
@@ -41,33 +39,45 @@ function modulo(a,b) {
 
 
 function operate(a,b, operator){
+    
+    let value;
+
     if(operator === "+"){
-        return add(a,b);
+        value = add(a,b);
     }
 
     else if(operator === "*"){
-        return multiply(a,b);
+        value = multiply(a,b);
     }
 
     else if(operator ==="^"){
-        return power(a,b);
+        value = power(a,b);
     }
 
     else if(operator ==="%"){
-        return modulo(a,b);
+        value = modulo(a,b);
     }
 
     else if(operator ==="-"){
-        return subtract(a,b);
+        value = subtract(a,b);
     }
 
     else if(operator ==="/"){
-        return divide(a,b);
+        value = divide(a,b);
     }
 
     else{
 
     }
+
+    if((value %1) != 0){
+        return value.toFixed(2);
+    }
+
+    else{
+        return value;
+    }
+
 }
 
 
@@ -140,15 +150,6 @@ buttonz.map(buttons => {
             console.log(display_value);
         }
 
-        /*
-        
-        if(text === "=" && !(lastChar === "." || lastChar === "-"|| lastChar === "+" || lastChar === "^" || lastChar === "*" || lastChar === "÷" || lastChar === "%")){
-            let outcome = equalSign(display.textContent);
-            display.innerHTML(outcome);
-        }
-        */
-
-
         if((text === "-"|| text  === "+" || text === "^" || text === "*" || text === "÷"  || text === "%") && !(text ==="=")){
             if(!(lastChar === "-"|| lastChar === "+" || lastChar === "^" || lastChar === "*" || lastChar === "÷" || lastChar === "%")){
                 if(display.innerHTML.length > 0){
@@ -170,23 +171,20 @@ buttonz.map(buttons => {
 });
 
 
-function findCorrect(equation){
+function findCorrect(equation1){
 
-
+    let equation = equation1;
     let result; 
-    let conversion = equation;
+    let conversion;
 
-    if(equation.charAt() === "-"){
-        conversion = conversion.substring(1);
+    if(equation.charAt(0) === "-"){
+        conversion = equation.substring(1);
     }
 
     else{
         conversion = equation;
     }
-    
-
-   
-    
+        
     if (conversion.includes("+")){
         let x = equation.indexOf("+");
         let first_operand = equation.substring(0,x);
@@ -195,10 +193,26 @@ function findCorrect(equation){
     }
 
     else if (conversion.includes("-")){
-        let x = equation.indexOf("-");
-        let first_operand = equation.substring(0,x);
-        let second_operand = equation.substring(x+1);
-        result =  operate(Number(first_operand), Number(second_operand), "-");
+       let first_operand;
+       let second_operand;
+       let x;
+    
+       if(equation.charAt(0) === "-"){
+            equation = equation.substring(1);           
+            x = conversion.indexOf("-");
+            first_operand = equation.substring(0,x);
+            second_operand = equation.substring(x+1);
+            result =  operate(-1*(Number(first_operand)), Number(second_operand), "-");
+       }
+
+        else{
+            x = conversion.indexOf("-");
+            first_operand = equation.substring(0,x);
+            second_operand = equation.substring(x+1);
+            result =  operate(Number(first_operand), Number(second_operand), "-");
+        }
+        console.log(first_operand + " HEY");
+        console.log(second_operand + " HEllo");
     }
 
 
@@ -236,9 +250,6 @@ function findCorrect(equation){
 
     return result;
 }
-
-
-
 
 function clearAll(){
     display.innerHTML = '';
